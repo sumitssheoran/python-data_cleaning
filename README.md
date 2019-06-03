@@ -11,7 +11,7 @@ np1=np.array(columns1)
 np2=np.array(columns2)
 col1=list(np1)
 col2=list(np2)
-#Removing the column which is not present in both the datasets.
+# Removing the column which is not present in both the datasets.
 for i in col1:
     if i not in col2:
         print(i)
@@ -19,24 +19,24 @@ for i in col1:
 data1.drop("Interest.Rate",axis=1,inplace=True) #Removed "Interest.Rate"
 data=pd.concat([data1,data2],ignore_index=True)
 data.dtypes
-#modifying "Amount.Requested" column
+# modifying "Amount.Requested" column
 count=0
 for i in range(2500):
     if data.loc[i,"Amount.Requested"]==data.loc[i,"Amount.Funded.By.Investors"]:
         count=count+1
-#count obtained is around 72%
+# count obtained is around 72%
 for i in range(2500):
     if data.loc[i,"Amount.Requested"]==".":
         data.loc[i,"Amount.Requested"]=data.loc[i,"Amount.Funded.By.Investors"]
         
 data["Amount.Requested"]=data["Amount.Requested"].astype(np.float64)
-#Modifying "Amount.Funded.By.Investors" column
+# Modifying "Amount.Funded.By.Investors" column
 for i in range(2500):
     if data.loc[i,"Amount.Funded.By.Investors"]==".":
         data.loc[i,"Amount.Funded.By.Investors"]=data.loc[i,"Amount.Requested"]
 data["Amount.Funded.By.Investors"]=data["Amount.Funded.By.Investors"].astype(np.float64)   
 
-#separating "FICO.Range" in the upper and lower element. 
+# separating "FICO.Range" in the upper and lower element. 
 l=[]
 for i in range(2500):
     data.loc[i,"FICO.Range"]=str(data.loc[i,"FICO.Range"])
@@ -53,10 +53,10 @@ data["lower_FICO"]=l_lower
 data["upper_FICO"]=l_upper
 
 
-#handling missing values in "Loan.Length" column
+# handling missing values in "Loan.Length" column
 data["Loan.Length"]=data["Loan.Length"].astype("category")
 data["Loan.Length"].value_counts()
-#At this point we encounter with a problem
+# At this point we encounter with a problem
 #total counts obtained from various categories is 2499,which is one less than total obs.
 
 for i in data["Loan.Length"]:
@@ -83,7 +83,7 @@ for i in range(len(data["Revolving.CREDIT.Balance"])):
 data["Revolving.CREDIT.Balance"]=data["Revolving.CREDIT.Balance"].astype(np.float64)
 data.dtypes
 
-#Employment.Length
+# Employment.Length
 data["Employment.Length"].value_counts()
 
 si=SimpleImputer(missing_values=np.nan,strategy="most_frequent")
@@ -98,8 +98,8 @@ plt.scatter(data["Amount.Requested"],data["Employment.Length"],c=data["Loan.Purp
 data["Loan.Purpose"]=data["Loan.Purpose"].astype("category")
 data["Loan.Purpose"].value_counts().plot(kind="bar")
 
-#Debt.To.Income.Ratio
-# remove the percentage sign
+
+# remove the percentage sign from Debt.To.Income.Ratio
 
 si=SimpleImputer(missing_values=np.nan,strategy="most_frequent")
 si=si.fit(data[["Debt.To.Income.Ratio"]])
